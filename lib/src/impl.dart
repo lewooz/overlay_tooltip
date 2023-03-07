@@ -22,22 +22,26 @@ class OverlayTooltipScaffold extends OverlayTooltipScaffoldImpl {
 
   final Curve tooltipAnimationCurve;
 
-  OverlayTooltipScaffold({
-    Key? key,
-    required this.controller,
-    required this.builder,
-    this.overlayColor = Colors.black54,
-    this.startWhen,
-    this.tooltipAnimationDuration = const Duration(milliseconds: 500),
-    this.tooltipAnimationCurve = Curves.decelerate,
-  }) : super(
+  final void Function()? onBarrierClick;
+
+  OverlayTooltipScaffold(
+      {Key? key,
+      required this.controller,
+      required this.builder,
+      this.overlayColor = Colors.black54,
+      this.startWhen,
+      this.tooltipAnimationDuration = const Duration(milliseconds: 500),
+      this.tooltipAnimationCurve = Curves.decelerate,
+      this.onBarrierClick})
+      : super(
             key: key,
             controller: controller,
             builder: builder,
             overlayColor: overlayColor,
             startWhen: startWhen,
             tooltipAnimationDuration: tooltipAnimationDuration,
-            tooltipAnimationCurve: tooltipAnimationCurve);
+            tooltipAnimationCurve: tooltipAnimationCurve,
+            onBarrierClick: onBarrierClick);
 
   static OverlayTooltipScaffoldImplState? of(BuildContext context) {
     final OverlayTooltipScaffoldImplState? result =
