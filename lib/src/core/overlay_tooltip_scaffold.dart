@@ -13,6 +13,7 @@ abstract class OverlayTooltipScaffoldImpl extends StatefulWidget {
   final Color overlayColor;
   final Duration tooltipAnimationDuration;
   final Curve tooltipAnimationCurve;
+  final void Function()? onBarrierClick;
 
   OverlayTooltipScaffoldImpl({
     Key? key,
@@ -22,6 +23,7 @@ abstract class OverlayTooltipScaffoldImpl extends StatefulWidget {
     required this.startWhen,
     required this.tooltipAnimationDuration,
     required this.tooltipAnimationCurve,
+    this.onBarrierClick
   }) : super(key: key) {
     if (startWhen != null) controller.setStartWhen(startWhen!);
   }
@@ -55,24 +57,27 @@ class OverlayTooltipScaffoldImplState
                       snapshot.data!.widgetKey.globalPaintBounds == null
                   ? SizedBox.shrink()
                   : Positioned.fill(
-                      child: Container(
-                        color: widget.overlayColor,
-                        child: TweenAnimationBuilder(
-                          key: ValueKey(snapshot.data!.displayIndex),
-                          tween: Tween<double>(begin: 0, end: 1),
-                          duration: widget.tooltipAnimationDuration,
-                          curve: widget.tooltipAnimationCurve,
-                          builder: (_, double val, child) {
-                            val = min(val, 1);
-                            val = max(val, 0);
-                            return Opacity(
-                              opacity: val,
-                              child: child,
-                            );
-                          },
-                          child: _TooltipLayout(
-                            model: snapshot.data!,
-                            controller: widget.controller,
+                      child: GestureDetector(
+                        onTap: widget.onBarrierClick,
+                        child: Container(
+                          color: widget.overlayColor,
+                          child: TweenAnimationBuilder(
+                            key: ValueKey(snapshot.data!.displayIndex),
+                            tween: Tween<double>(begin: 0, end: 1),
+                            duration: widget.tooltipAnimationDuration,
+                            curve: widget.tooltipAnimationCurve,
+                            builder: (_, double val, child) {
+                              val = min(val, 1);
+                              val = max(val, 0);
+                              return Opacity(
+                                opacity: val,
+                                child: child,
+                              );
+                            },
+                            child: _TooltipLayout(
+                              model: snapshot.data!,
+                              controller: widget.controller,
+                            ),
                           ),
                         ),
                       ),
